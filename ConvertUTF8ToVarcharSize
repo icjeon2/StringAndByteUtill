@@ -1,0 +1,29 @@
+fun convertUTF8ToVarcharSize(value : String, max: Int): String {
+    val charset = Charsets.UTF_8
+    var i = 0
+    var fullSize = 0
+
+    // 한글자에 2바이트가 최대이므로 최대값이 length의 2배보다 크면 실행안함.
+    if(value.length*2 <= max)
+        return value
+
+    var varcharSize = 0
+    for(c in value){
+        fullSize += if(c.toString().toByteArray(charset).size == 3) 2
+        else 1
+
+        if(fullSize <= max) {
+            varcharSize = fullSize
+            i++
+        }
+
+        if(fullSize >= max) {
+            break
+        }
+    }
+
+    println("VARCHAR Size : " + varcharSize)
+    println("maxIndex : " + i)
+
+    return value.substring(0, i)
+}
